@@ -1,15 +1,6 @@
-.. image:: https://travis-ci.org/MacHu-GWU/numpymate-project.svg?branch=master
-
-.. image:: https://img.shields.io/pypi/v/numpymate.svg
-
-.. image:: https://img.shields.io/pypi/l/numpymate.svg
-
-.. image:: https://img.shields.io/pypi/pyversions/numpymate.svg
-
-
 Welcome to numpymate Documentation
 ===============================================================================
-This is just a example project for demonstration purpose.
+``numpymate`` is a library to provide minor improvement of `numpy <http://www.numpy.org/>`_.
 
 
 **Quick Links**
