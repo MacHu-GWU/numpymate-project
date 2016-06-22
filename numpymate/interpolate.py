@@ -14,8 +14,8 @@ except ImportError as e:
     print("Failed to do 'from scipy.interpolate import interp1d', "
           "scipy may not been installed properly: %s" % e)
 
-from convert2 import any2datetime
-from rolex import rolex
+from numpymate.packages.convert2 import any2datetime
+from numpymate.packages.rolex import rolex
 
 
 def datetime_to_utctimestamp(datetime_array):
@@ -43,7 +43,7 @@ def datetime_mode_decorator(func):
 
     **中文文档**
     """
-    def wrapper(*args, enable_warning=True, **kwargs):
+    def wrapper(*args, **kwargs):
         x_axis = kwargs.get("x_axis", args[0])
         y_axis = kwargs.get("y_axis", args[1])
         x_new_axis = kwargs.get("x_new_axis", args[2])
@@ -52,7 +52,7 @@ def datetime_mode_decorator(func):
         x_new_axis = datetime_to_utctimestamp(x_new_axis)
 
         new_args = (x_axis, y_axis, x_new_axis)
-        return func(*new_args, enable_warning=enable_warning)
+        return func(*new_args)
 
     return wrapper
 
@@ -71,7 +71,7 @@ def linear_interp(x_axis, y_axis, x_new_axis):
 linear_interp_by_datetime = datetime_mode_decorator(linear_interp)
 
 
-def easy_linear_interp(x_axis, y_axis, x_new_axis, enable_warning=True):
+def easy_linear_interp(x_axis, y_axis, x_new_axis):
     """Interpolate y_axis = f(x_axis) -> y_new_axis = f(x_new_axis), use 
     linear interpolation. x_new_axis's range DOESN'T has to be included in x_axis.
 
@@ -83,23 +83,25 @@ def easy_linear_interp(x_axis, y_axis, x_new_axis, enable_warning=True):
 
     对 y = f(x) 进行线性插值, 不要求被差值的点在 x[0] ~ x[-1] 之间。
     """
+    # 由于之后要进行列表的拼接, 所以需要将数据转化为list
+    if not isinstance(x_axis, list):
+        x_axis = list(x_axis)
+    
+    if not isinstance(y_axis, list):
+        y_axis = list(y_axis)
+    
+    if not isinstance(x_new_axis, list):
+        x_new_axis = list(x_new_axis)
+    
     left_pad_x, left_pad_y = list(), list()
     right_pad_x, right_pad_y = list(), list()
-
+    
     if x_new_axis[0] < x_axis[0]:
-        if enable_warning:
-            print("WARNING! the first element of x_new_axis is beyond left "
-                  "of x_axis. Use easy_linear_interp(enable_warning=False) "
-                  "to disable this warning.")
         left_pad_x.append(x_new_axis[0])
         left_pad_y.append(locate(x_axis[0], y_axis[0],
                                  x_axis[1], y_axis[1], x_new_axis[0]))
 
     if x_new_axis[-1] > x_axis[-1]:
-        if enable_warning:
-            print("WARNING! the last element of x_new_axis is beyond right "
-                  "of x_axis. Use easy_linear_interp(enable_warning=False) "
-                  "to disable this warning.")
         right_pad_x.append(x_new_axis[-1])
         right_pad_y.append(locate(x_axis[-1], y_axis[-1],
                                   x_axis[-2], y_axis[-2], x_new_axis[-1]))

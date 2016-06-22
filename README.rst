@@ -2,15 +2,15 @@ Welcome to numpymate Documentation
 ===============================================================================
 ``numpymate`` is a library to provide minor improvement of `numpy <http://www.numpy.org/>`_.
 
+Prerequisity: ``numpy + mkl``, ``scipy``.
+
 
 **Quick Links**
 -------------------------------------------------------------------------------
 - `GitHub Homepage <https://github.com/MacHu-GWU/numpymate-project>`_
-- `Online Documentation <http://pythonhosted.org/numpymate>`_
 - `PyPI download <https://pypi.python.org/pypi/numpymate>`_
 - `Install <install_>`_
 - `Issue submit and feature request <https://github.com/MacHu-GWU/numpymate-project/issues>`_
-- `API reference and source code <http://pythonhosted.org/numpymate/py-modindex.html>`_
 
 
 .. _install:

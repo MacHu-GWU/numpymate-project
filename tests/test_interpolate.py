@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+All method should able to take list, numpy.ndarray and pandas.Series object
+as input.
+"""
+
 from datetime import datetime
-import numpy as np
+import numpy as np, pandas as pd
 from numpymate import interpolate
 
 
 def test_linear_interp():
     x = [1, 2, 3]
     y = [1, 2, 3]
-    x_new1 = [1, 1.5, 2, 2.5, 3]
-    y_new1 = interpolate.easy_linear_interp(x, y, x_new1, enable_warning=False)
-    x_new2 = [0, 1, 2, 3, 4]
-    y_new2 = interpolate.easy_linear_interp(x, y, x_new2, enable_warning=False)
+    x_new1 = pd.Series([1, 1.5, 2, 2.5, 3])
+    y_new1 = interpolate.easy_linear_interp(x, y, x_new1)
+    x_new2 = pd.Series([0, 1, 2, 3, 4])
+    y_new2 = interpolate.easy_linear_interp(x, y, x_new2)
 
     for i, j in zip(y_new1, [1, 1.5, 2, 2.5, 3]):
         assert abs(i - j) <= 0.000001
@@ -25,14 +30,13 @@ def test_linear_interp_by_datetime():
         datetime(2014, 1, 1, 0, 0, 10),
         datetime(2014, 1, 1, 0, 0, 20),
     ])
-    y = [1, 2]
+    y = pd.Series([1, 2])
     x_new1 = np.array([
         datetime(2014, 1, 1, 0, 0, 5),
         datetime(2014, 1, 1, 0, 0, 15),
         datetime(2014, 1, 1, 0, 0, 25),
     ])
-    y_new1 = interpolate.easy_linear_interp_by_datetime(
-        x, y, x_new1, enable_warning=False)
+    y_new1 = interpolate.easy_linear_interp_by_datetime(x, y, x_new1)
     for i, j in zip(y_new1, [0.5, 1.5, 2.5]):
         assert abs(i - j) <= 0.000001
 
@@ -86,10 +90,12 @@ def test_exam_reliability_by_datetime():
 
 
 def compare():
+    """Compare linear and spline interpolation.
+    """
     import matplotlib.pyplot as plt
 
     x = np.linspace(0, 10, 10)
-    y = np.cos(-x**2 / 8.0)
+    y = pd.Series(np.cos(-x**2 / 8.0))
     x_new = np.linspace(0, 10, 40)
 
     y_cubic = interpolate.spline_interp(x, y, x_new)
